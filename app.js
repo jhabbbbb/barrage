@@ -2,7 +2,7 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 
-app.listen(80);
+app.listen(12345);
 
 function handler (req, res) {
   fs.readFile(__dirname + '/index.html',
@@ -18,8 +18,12 @@ function handler (req, res) {
 }
 
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
+  socket.emit('news', { hello: 'hello client' });
   socket.on('my other event', function (data) {
     console.log(data);
   });
+  socket.on('messageC2S', function(data) {
+    console.log(data);
+    io.emit('messageS2C', {message: data.message});
+  })
 });
